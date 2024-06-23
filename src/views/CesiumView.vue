@@ -23,6 +23,8 @@ import {
     handleDefaultModelEffect,
     flyToDefaultView
 } from "@/cesiumTools/sceneManager";
+import {getLine} from '@/api/line'
+import {useLineData} from '@/store'
 
 //初始化cesium实例
 Cesium.Ion.defaultAccessToken =

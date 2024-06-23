@@ -12,22 +12,35 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/lodash": "^4.17.5",
     "@vitejs/plugin-vue": "^5.0.4",
     "sass": "^1.77.0",
     "vite": "^5.2.11",
     "vite-plugin-cesium": "^1.2.22",
+    "vite-plugin-compression": "^0.5.1",
     "vite-plugin-externals": "^0.6.2",
     "vite-plugin-insert-html": "^1.0.1",
-    "vite-plugin-static-copy": "^0.13.1",
-    "vite-plugin-compression": "^0.5.1"
+    "vite-plugin-static-copy": "^0.13.1"
   },
   "dependencies": {
+    "@videojs-player/vue": "^1.0.0",
     "ant-design-vue": "^4.2.1",
     "axios": "^1.6.8",
     "cesium": "1.97",
+    "cesium-heatmap-es6": "^0.8.0",
+    "dayjs": "^1.11.11",
+    "echarts": "^5.5.0",
+    "flv.js": "^1.6.2",
+    "heatmap.js-fixed": "^2.0.2",
+    "lodash": "^4.17.21",
     "pinia": "^2.1.7",
+    "turf": "^3.0.14",
     "v-scale-screen": "^2.2.0",
+    "v-viewer": "^3.0.11",
+    "video.js": "^8.12.0",
+    "viewerjs": "^1.11.6",
     "vue": "^3.4.27",
-    "vue-router": "^4.3.2"
+    "vue-router": "^4.3.2",
+    "vue3-seamless-scroll": "^2.0.1"
   }
 }

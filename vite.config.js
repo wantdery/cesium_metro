@@ -23,15 +23,17 @@ const config = (context) => {
   const cesiumBaseUrl = env["VITE_CESIUM_BASE_URL"];
   console.log(cesiumBaseUrl);
   // 默认 base 是 '/'
+
   const base = "/";
   const plugins = [
     vue(),
     viteExternalsPlugin(
       {
         cesium: "Cesium", // 外部化 cesium 依赖，之后全局访问形式是 window['Cesium']
-      },{
-		disableInServe:true //开发环境不启用外部化
-	  }
+      },
+      {
+        disableInServe: true, //开发环境不启用外部化
+      }
     ),
     insertHtml({
       head: [
@@ -42,7 +44,7 @@ const config = (context) => {
             ? `${cesiumBaseUrl}Cesium.js`
             : `${base}${cesiumBaseUrl}Cesium.js`,
         }),
-		h("link", {
+        h("link", {
           rel: "stylesheet",
           href: isProd
             ? `${cesiumBaseUrl}Widgets/widgets.css`
@@ -80,32 +82,45 @@ const config = (context) => {
       })
     );
   }
-  plugins.push(compress({
-    threshold: 10 * 1024 // 10KB 以下不压缩
-  }))
-  const resolve={
+  plugins.push(
+    compress({
+      threshold: 10 * 1024, // 10KB 以下不压缩
+    })
+  );
+  const resolve = {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
-  }
-  const css={
-	// css预处理器
+  };
+  const css = {
+    // css预处理器
     preprocessorOptions: {
-		scss: {
-		  // 引入 mixin.scss 这样就可以在全局中使用 mixin.scss中预定义的变量了
-		  // 给导入的路径最后加上 ;
-		  additionalData: '@import "@/assets/style/mixin.scss";',
-		},
-	  }
-  }
+      scss: {
+        // 引入 mixin.scss 这样就可以在全局中使用 mixin.scss中预定义的变量了
+        // 给导入的路径最后加上 ;
+        additionalData: '@import "@/assets/style/mixin.scss";',
+      },
+    },
+  };
+  const server = {
+    proxy: {
+      "/api": {
+        target: "https://restapi.amap.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  };
+
   return {
     base,
     envDir,
     mode,
     plugins,
-	resolve,
-	css
-  }
+    resolve,
+    css,
+    // server
+  };
 };
 
 // https://vitejs.dev/config/

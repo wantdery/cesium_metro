@@ -8,11 +8,16 @@
  */
 import { createRouter, createWebHashHistory } from "vue-router";
 
+
 // 2. 定义一些路由
 // 每个路由都需要映射到一个组件。
 // 我们后面再讨论嵌套路由。
 
 const routes = [
+    { path: "/key_activity", component: ()=>import("../views/KeyActivity.vue") },
+    { path: "/progress_history", component: ()=>import("../views/Progress.vue") },
+    { path: "/current_route", component: ()=>import("../views/CurrentRoute.vue") },
+    { path: "/station_manage", component: ()=>import("../views/StationManage.vue") }
 ];
 
 // 3. 创建路由实例并传递 `routes` 配置

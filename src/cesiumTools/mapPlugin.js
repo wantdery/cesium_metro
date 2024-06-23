@@ -275,6 +275,7 @@ class GoogleImageryProvider extends Cesium.UrlTemplateImageryProvider {
 
 
 export {
+  CoordTransform,
   TencentImageryProvider,
   GoogleImageryProvider
 };

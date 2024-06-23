@@ -9,7 +9,7 @@
 <template>
     <div id="footer">
       <ul>
-          <li v-for="item in menus">
+          <li v-for="item in menus" :key="item.name">
               <router-link :to="item.path" 
               :class="[item.isActive?'active-item':'',item.name==='首页'?'home':'']">{{item.name}}</router-link>
           </li>
