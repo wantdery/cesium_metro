@@ -63,10 +63,9 @@ onMounted(async ()=>{
         currentWeek.value=weekMap[dayjs().format('dddd')]
         currentSecond.value=dayjs().format('hh:mm:ss')
     }, 100);
-    const weather=await getWeather()
-    console.log(weather)
-    weather.value=weather.lives[0]?.weather || '晴'
-    temp.value=weather.lives[0]?.temperature || 0
+    const weatherInfo=await getWeather()
+    weather.value=weatherInfo.lives[0]?.weather || '晴'
+    temp.value=weatherInfo.lives[0]?.temperature || 0
 })
 
 onUnmounted(()=>{
