@@ -14,17 +14,20 @@
 
 <script setup>
 import * as Cesium from "cesium";
-import { onMounted } from "vue";
+import { onMounted,getCurrentInstance } from "vue";
 import app from '../main'
 import {
     initViewer,
     setScene,
     loadTilesets,
     handleDefaultModelEffect,
-    flyToDefaultView
+    flyToDefaultView,
+    
 } from "@/cesiumTools/sceneManager";
 import {getLine} from '@/api/line'
 import {useLineData} from '@/store'
+const { appContext } = getCurrentInstance();
+const global = appContext.config.globalProperties;
 
 //初始化cesium实例
 Cesium.Ion.defaultAccessToken =
@@ -38,6 +41,7 @@ onMounted(async () => {
       url:"http://localhost:9003/model/Q6yR6vkj/tileset.json",
       options:{}
     }]
+    global.$viewer = viewer;
     // 加载多个3dtiles
     await loadTilesets(viewer,modelUrls,(tilesets)=>{
       handleDefaultModelEffect(tilesets[0])
