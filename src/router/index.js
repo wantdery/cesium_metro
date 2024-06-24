@@ -17,7 +17,8 @@ const routes = [
     { path: "/key_activity", component: ()=>import("../views/KeyActivity.vue") },
     { path: "/progress_history", component: ()=>import("../views/Progress.vue") },
     { path: "/current_route", component: ()=>import("../views/CurrentRoute.vue") },
-    { path: "/station_manage", component: ()=>import("../views/StationManage.vue") }
+    { path: "/station_manage", component: ()=>import("../views/StationManage.vue") },
+    { path: "/", component: ()=>import("../App.vue") }
 ];
 
 // 3. 创建路由实例并传递 `routes` 配置
