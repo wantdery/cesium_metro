@@ -1,14 +1,15 @@
 <template>
   <div id="Home">
     <Header />
-
+    <Content />
     <Footer />
   </div>
 </template>
 
 <script setup>
-import Header from "@/components/header.vue";
-import Footer from "@/components/footer.vue";
+import Header from "@/components/Header.vue";
+import Content from "@/views/Content.vue";
+import Footer from "@/components/Footer.vue";
 </script>
 
 <style scoped>
