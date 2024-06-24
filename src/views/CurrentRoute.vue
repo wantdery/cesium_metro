@@ -22,12 +22,19 @@
 
 <script setup>
 import * as Cesium from "cesium";
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, getCurrentInstance } from "vue";
+import axios from "axios";
 import { useLineData } from "@/store";
-const lineData = useLineData();
+const { appContext } = getCurrentInstance();
+const global = appContext.config.globalProperties;
+//const lineData = useLineData();
 const subLineData = ref([]);
 onMounted(() => {
-  console.log(lineData, "lineData");
+  axios.get("http://127.0.0.1:8090/api/v1/getLine").then((res) => {
+    console.log(res.data);
+    subLineData.value = res.data.data;
+    console.log(subLineData.value, " subLineData.value");
+  });
 });
 </script>
 
