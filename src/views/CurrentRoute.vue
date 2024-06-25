@@ -28,6 +28,16 @@
       <div class="subline_header">
         <i class="iconfont icon-ditie"></i>地铁站点
       </div>
+      <div class="item-wrapper">
+        <div
+          class="subline_list"
+          v-for="(item, index) in resultList"
+          :key="index"
+        >
+          <div class="box"></div>
+          <span :style="{ color: '#34c5cf' }"> {{ item.name.slice(-3) }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -43,6 +53,7 @@ const global = appContext.config.globalProperties;
 //const lineData = useLineData();
 const subLineData = ref([]);
 const resultList = ref([]);
+const stationsList = ref({});
 const linecolors = lineColors;
 console.log(linecolors, "linecolor");
 onMounted(() => {
@@ -53,20 +64,17 @@ onMounted(() => {
     resultList.value = subLineData.value.map((item, index) => {
       return { ...item, color: linecolors[index] };
     });
+    stationsList.value = resultList.stationsList;
+    console.log(stationsList.value, "stationsList");
     console.log(resultList.value);
     console.log(typeof subLineData.value, " subLineData.value");
   });
 });
 const chooseLine = (item) => {
-  item.isSelected = !item.isSelected;
-  if (item.isSelected) {
+  resultList.value.forEach((dataItem) => {
     dataItem.isSelected = false;
-    resultList.forEach((dataItem) => {
-      if (dataItem !== item) {
-        dataItem.isSelected = false;
-      }
-    });
-  }
+  });
+  item.isSelected = true;
 };
 </script>
 
