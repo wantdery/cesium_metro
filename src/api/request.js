@@ -28,6 +28,9 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => {
     const data = response.data;
+    if(data.infocode === '10000'){
+      return data
+    }
     if (data.code === 200) {
       return data;
     } else {

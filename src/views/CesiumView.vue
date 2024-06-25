@@ -14,17 +14,20 @@
 
 <script setup>
 import * as Cesium from "cesium";
-import { onMounted } from "vue";
+import { onMounted,getCurrentInstance } from "vue";
 import app from '../main'
 import {
     initViewer,
     setScene,
     loadTilesets,
     handleDefaultModelEffect,
-    flyToDefaultView
+    flyToDefaultView,
+    
 } from "@/cesiumTools/sceneManager";
 import {getLine} from '@/api/line'
 import {useLineData} from '@/store'
+const { appContext } = getCurrentInstance();
+const global = appContext.config.globalProperties;
 const lineDataStore=useLineData()
 //初始化cesium实例
 Cesium.Ion.defaultAccessToken =
@@ -41,6 +44,7 @@ onMounted(async () => {
     // 加载线路数据
     const lineData = await getLine()
     lineDataStore.setData(lineData)
+    global.$viewer = viewer;
     // 加载多个3dtiles
     await loadTilesets(viewer,modelUrls,(tilesets)=>{
       handleDefaultModelEffect(tilesets[0])
