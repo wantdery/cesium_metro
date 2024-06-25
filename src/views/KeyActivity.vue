@@ -1,19 +1,14 @@
 <template>
     <div id="subLine-controller">
         <div class="item-wrapper">
-<div class="item"  v-for="item in subLineData" :key="item.color">
-<div class="box" :style="{ borderColor: item.color, backgroundColor: item.color }">
-    <span :style="{ color: '#34c5cf' }">{{ item.name.slice(-3) }}</span>
-</div>
-
+<div class="item"  v-for="item in subLineData" :key="item.color"  @click.stop="handleItemClick(item)">
+<div class="box" :style="{ borderColor: item.color, backgroundColor: item.color }"></div>
+<span :style="{ color: '#34c5cf' }">{{ item.name.slice(-3) }}</span>
 </div>
 
         </div>
-
-
-
-
     </div>
+
     <div class="active-panel">
 
 
@@ -24,17 +19,59 @@
 import { computed,onMounted,ref,onBeforeUnmount,getCurrentInstance } from 'vue'
 import { useLineData } from '@/store'
 import axios from 'axios'
+import {activity} from '@/store/staticData'
+import {flyToLine,binkLineByName,addGradientCone,removeAllCones,flyToCone} from '@/cesiumTools/effectController'
 const { appContext } = getCurrentInstance();
 const global = appContext.config.globalProperties;
 // 获取数据
 
-// const subLineData = lineData.allData
+const subLineData = ref([])
 let viewer
 onMounted(async()=>{
-    axios.get('http://127.0.0.1:8090/api/v1/getLine').then(res=>{
-        console.log(res.data)
-    })
+
+    const res=await axios.get('http://127.0.0.1:8090/api/v1/getLine')
+// console.log(res.data.data)
+subLineData.value=res.data.data
+// console.log(subLineData.value[0].name)
+viewer=global.$viewer
+
+
 })
+
+// 重点活动列表
+const activityData = ref([]);
+// 当前线路上激活的站点
+const currentStations=ref([])
+// 点击线路，跳转到质心点并高亮该线段,展示重点活动，使用电子围墙的材质
+const handleItemClick = (item) => {
+    const {name,stationsList,color}=item
+    flyToLine(viewer,name)
+    // 根据线路名称闪烁线路
+    binkLineByName(name)
+    currentStations.value=stationsList
+    activityData.value=activity
+    // showActiveArea(color)
+    console.log('xxxxx')
+}
+const showActiveArea=(color)=>{
+    removeAllCones(viewer)
+    const ids=activityData.value.map(item=>item.id)
+    const activedStations=currentStations.value.map((item,index)=>{
+        item.id=index
+        return item
+    }).filter(item=>ids.includes(item.id))
+    activedStations.forEach(item=>{
+        const {position,id}=item
+        // 添加渐变圆柱
+        addGradientCone(viewer,{
+            position,
+            color,
+            name:id
+        })
+    })
+}
+
+
 
 </script>
 
@@ -61,6 +98,7 @@ onMounted(async()=>{
     background: transparent;
     user-select: all;
     cursor: pointer;
+
 }
 
 .item {
