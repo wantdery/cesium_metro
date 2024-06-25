@@ -25,7 +25,7 @@ import {
 } from "@/cesiumTools/sceneManager";
 import {getLine} from '@/api/line'
 import {useLineData} from '@/store'
-
+const lineDataStore=useLineData()
 //初始化cesium实例
 Cesium.Ion.defaultAccessToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ODAzN2EzOS1kZDMzLTQ5Y2UtYjYxMi1jMzQxNTdiMTUzN2IiLCJpZCI6NDU5NDIsImlhdCI6MTYxNTYyNDQyOX0.BucgmI6OJ-7ixj7rcQ_Qyg45DkvdHmaLrFwyMYitLcI";
@@ -38,6 +38,9 @@ onMounted(async () => {
       url:"http://localhost:9003/model/Q6yR6vkj/tileset.json",
       options:{}
     }]
+    // 加载线路数据
+    const lineData = await getLine()
+    lineDataStore.setData(lineData)
     // 加载多个3dtiles
     await loadTilesets(viewer,modelUrls,(tilesets)=>{
       handleDefaultModelEffect(tilesets[0])
