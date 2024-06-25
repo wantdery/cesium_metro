@@ -14,7 +14,7 @@
 
 <script setup>
 import * as Cesium from "cesium";
-import { onMounted, getCurrentInstance } from "vue";
+import { onMounted, getCurrentInstance,ref,markRaw } from "vue";
 import app from "../main";
 import {
   initViewer,
@@ -41,13 +41,16 @@ onMounted(async () => {
       options:{}
     }]
     // 加载线路数据
+    lineDataStore.setViewer(markRaw(viewer))
     const lineData = await getLine()
+    
     lineDataStore.setData(lineData)
     global.$viewer = viewer;
     // 加载多个3dtiles
     await loadTilesets(viewer,modelUrls,(tilesets)=>{
       handleDefaultModelEffect(tilesets[0])
       app.provide("$viewer_tile", { viewer, tilesets });
+      lineDataStore.setTileset(markRaw(tilesets[0]))
     })
 });
 </script>

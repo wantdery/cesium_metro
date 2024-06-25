@@ -77,6 +77,18 @@ onMounted(async () => {
     cursor: pointer;
 }
 
+:deep(.ant-popover-arrow){
+    display: none !important;
+}
+
+:deep(.ant-popover-inner){
+    background: none;
+}
+
+:deep(.ant-popover){
+    background: none !important;
+}
+
 .item {
     width: 3.385vw;
     height: 1.042vw;

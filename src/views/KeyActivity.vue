@@ -24,17 +24,21 @@ import {
 } from "vue";
 import { useLineData } from "@/store";
 import axios from "axios";
+import {activity} from '@/store/staticData'
 const { appContext } = getCurrentInstance();
 const global = appContext.config.globalProperties;
 // 获取数据
-
-// const subLineData = lineData.allData
+import dayjs from 'dayjs'
+const lineData = useLineData()
+const subLineData = lineData.allData
+console.log(subLineData);
 let viewer;
-onMounted(async () => {
-  axios.get("http://127.0.0.1:8090/api/v1/getLine").then((res) => {
-    console.log(res.data);
-  });
-});
+
+onMounted(()=>{
+    viewer=lineData.Viewer
+    
+})
+
 </script>
 
 <style lang="scss" scoped>
