@@ -7,31 +7,30 @@
  * @LastEditTime: 2024-05-08 16:40:27
 -->
 <template>
-    <div id="cesium-viewer">
-        <slot/>
-    </div>
+  <div id="cesium-viewer">
+    <slot />
+  </div>
 </template>
 
 <script setup>
 import * as Cesium from "cesium";
-import { onMounted,getCurrentInstance } from "vue";
-import app from '../main'
+import { onMounted, getCurrentInstance,ref,markRaw } from "vue";
+import app from "../main";
 import {
-    initViewer,
-    setScene,
-    loadTilesets,
-    handleDefaultModelEffect,
-    flyToDefaultView,
-    
+  initViewer,
+  setScene,
+  loadTilesets,
+  handleDefaultModelEffect,
+  flyToDefaultView,
 } from "@/cesiumTools/sceneManager";
-import {getLine} from '@/api/line'
-import {useLineData} from '@/store'
+import { getLine } from "@/api/line";
+import { useLineData } from "@/store";
 const { appContext } = getCurrentInstance();
 const global = appContext.config.globalProperties;
-
+const lineDataStore=useLineData()
 //初始化cesium实例
 Cesium.Ion.defaultAccessToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ODAzN2EzOS1kZDMzLTQ5Y2UtYjYxMi1jMzQxNTdiMTUzN2IiLCJpZCI6NDU5NDIsImlhdCI6MTYxNTYyNDQyOX0.BucgmI6OJ-7ixj7rcQ_Qyg45DkvdHmaLrFwyMYitLcI";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ODAzN2EzOS1kZDMzLTQ5Y2UtYjYxMi1jMzQxNTdiMTUzN2IiLCJpZCI6NDU5NDIsImlhdCI6MTYxNTYyNDQyOX0.BucgmI6OJ-7ixj7rcQ_Qyg45DkvdHmaLrFwyMYitLcI";
 
 onMounted(async () => {
     const viewer = initViewer("cesium-viewer");
@@ -41,18 +40,24 @@ onMounted(async () => {
       url:"http://localhost:9003/model/Q6yR6vkj/tileset.json",
       options:{}
     }]
+    // 加载线路数据
+    lineDataStore.setViewer(markRaw(viewer))
+    const lineData = await getLine()
+    
+    lineDataStore.setData(lineData)
     global.$viewer = viewer;
     // 加载多个3dtiles
     await loadTilesets(viewer,modelUrls,(tilesets)=>{
       handleDefaultModelEffect(tilesets[0])
       app.provide("$viewer_tile", { viewer, tilesets });
+      lineDataStore.setTileset(markRaw(tilesets[0]))
     })
 });
 </script>
 <style>
 #cesium-viewer {
-    width: 100%;
-    height: 100%;
-    pointer-events: all;
+  width: 100%;
+  height: 100%;
+  pointer-events: all;
 }
 </style>
