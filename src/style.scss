@@ -1,4 +1,55 @@
-#cesiumContainer{
-    width: 100vw;
-    height: 100vh;
+#cesiumContainer {
+  width: 100vw;
+  height: 100vh;
+}
+
+.ant-collapse-content {
+  background-color: transparent !important;
+  color: #fff;
+  border: none !important;
+}
+
+.ant-popover-inner{
+    // display: none;
+    // background-color: none !important;
+    // background-color: transparent !important;
+    background: none !important;
+}
+
+.ant-popover-arrow,.ant-popover-arrow::after , .ant-popover-arrow::before{
+    display: none;
+    background: none !important;
+}
+
+.ant-collapse-content > .ant-collapse-content-box {
+  background: transparent;
+  padding: 0 !important;
+}
+
+.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff !important;
+  border: none;
+}
+
+.ant-collapse-item {
+  border: none !important;
+}
+
+.ant-card-head::after {
+  display: none;
+}
+
+.ant-card-small > .ant-card-head {
+  border: none;
+}
+
+.ant-card-small > .ant-card-body {
+  padding: 6px;
+}
+
+.ant-collapse {
+  background-color: transparent !important;
+  color: #fff;
+  border: none !important;
 }

@@ -8,7 +8,10 @@
  */
 import axios from "axios";
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL, // 所有请求的公共地址部分
+  baseURL: import.meta.env.VITE_BASE_URL, // 所有请求的公共地址部分
+  // headers: { "Content-Type": "application/json;charset=UTF-8" },
+  // withCredentials: true, // 跨域请求时是否需要使用凭证
+  // timeout: 30000, // 请求超时时间
 });
 
 api.interceptors.request.use(
