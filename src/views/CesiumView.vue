@@ -27,34 +27,28 @@ import { getLine } from "@/api/line";
 import { useLineData } from "@/store";
 const { appContext } = getCurrentInstance();
 const global = appContext.config.globalProperties;
-
-const lineDataStore = useLineData();
-
+const lineDataStore=useLineData()
 //初始化cesium实例
 Cesium.Ion.defaultAccessToken =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ODAzN2EzOS1kZDMzLTQ5Y2UtYjYxMi1jMzQxNTdiMTUzN2IiLCJpZCI6NDU5NDIsImlhdCI6MTYxNTYyNDQyOX0.BucgmI6OJ-7ixj7rcQ_Qyg45DkvdHmaLrFwyMYitLcI";
 
 onMounted(async () => {
-  const viewer = initViewer("cesium-viewer");
-  setScene(viewer);
-  flyToDefaultView(viewer);
-  const modelUrls = [
-    {
-      url: "http://localhost:9003/model/Q6yR6vkj/tileset.json",
-      options: {},
-    },
-  ];
-
-  lineDataStore.setViewer(markRaw(viewer));
-  // 加载线路数据
-  const lineData = await getLine();
-  lineDataStore.setData(lineData);
-  global.$viewer = viewer;
-  // 加载多个3dtiles
-  await loadTilesets(viewer, modelUrls, (tilesets) => {
-    handleDefaultModelEffect(tilesets[0]);
-    app.provide("$viewer_tile", { viewer, tilesets });
-  });
+    const viewer = initViewer("cesium-viewer");
+    setScene(viewer);
+    flyToDefaultView(viewer)
+    const modelUrls = [{
+      url:"http://localhost:9003/model/Q6yR6vkj/tileset.json",
+      options:{}
+    }]
+    // 加载线路数据
+    const lineData = await getLine()
+    lineDataStore.setData(lineData)
+    global.$viewer = viewer;
+    // 加载多个3dtiles
+    await loadTilesets(viewer,modelUrls,(tilesets)=>{
+      handleDefaultModelEffect(tilesets[0])
+      app.provide("$viewer_tile", { viewer, tilesets });
+    })
 });
 </script>
 <style>
