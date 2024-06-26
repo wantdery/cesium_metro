@@ -30,14 +30,13 @@ const global = appContext.config.globalProperties;
 const lineDataStore=useLineData()
 //初始化cesium实例
 Cesium.Ion.defaultAccessToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ODAzN2EzOS1kZDMzLTQ5Y2UtYjYxMi1jMzQxNTdiMTUzN2IiLCJpZCI6NDU5NDIsImlhdCI6MTYxNTYyNDQyOX0.BucgmI6OJ-7ixj7rcQ_Qyg45DkvdHmaLrFwyMYitLcI";
-
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwZWI2YTk3ZC1mZWI4LTQyMDUtYmI1Ny00YzFkYTFmYmIwYzIiLCJpZCI6MjE3MTU4LCJpYXQiOjE3MTY0Mjc1MDZ9.dC3r6S37sujU0HyCKe-k_flKuGM9kyy_oqkd9eQutZs";
 onMounted(async () => {
     const viewer = initViewer("cesium-viewer");
     setScene(viewer);
     flyToDefaultView(viewer)
     const modelUrls = [{
-      url:"http://localhost:9003/model/Q6yR6vkj/tileset.json",
+      url:"http://localhost:8888/wuhan/tileset.json",
       options:{}
     }]
     // 加载线路数据

@@ -37,18 +37,13 @@ let viewer;
 
 onMounted(() => {
     viewer = lineData.Viewer
-
 })
 
 onMounted(async () => {
-
     const res = await axios.get('http://127.0.0.1:8090/api/v1/getLine')
     // console.log(res.data.data)
     subLineData.value = res.data.data
     // console.log(subLineData.value[0].name)
-    viewer = global.$viewer
-
-
 })
 
 // 重点活动列表
