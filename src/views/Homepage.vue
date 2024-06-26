@@ -7,9 +7,9 @@
 </template>
 
 <script setup>
-import Header from "@/components/Header.vue";
+import Header from "@/components/header.vue";
 import Content from "@/views/Content.vue";
-import Footer from "@/components/Footer.vue";
+import Footer from "@/components/footer.vue";
 </script>
 
 <style scoped>
