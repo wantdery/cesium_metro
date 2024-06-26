@@ -9,6 +9,24 @@
     </div>
 
     <div class="active-panel">
+        <div class="header">
+            <strong>重点活动</strong>
+            <span>{{ date }}</span>
+        </div>
+        <div class="content">
+            <div class="active-wrapper" v-if="activityData.length">
+                <div v-for="item in activityData" class="acitve-item"
+                    @click="clickActiveItem(item)" :key="item">
+                    <!-- :class="['acitve-item', item.isActive ? 'item-active' : '']" -->
+                    <div>{{ item.activedTime }}</div>
+                    <div>{{ item.activedPlace }}</div>
+                    <div>{{ item.activity }}</div>
+                </div>
+
+            </div>
+            <a-empty v-else :image="simpleImage" description="无数据" />
+            
+        </div>
 
 
     </div>
@@ -26,25 +44,24 @@ import {
     getCurrentInstance,
 } from "vue";
 import { useLineData } from "@/store";
-const { appContext } = getCurrentInstance();
-const global = appContext.config.globalProperties;
+
 // 获取数据
 import dayjs from 'dayjs'
 const lineData = useLineData()
 const subLineData = lineData.allData
-console.log(subLineData);
+
 let viewer;
 
 onMounted(() => {
-    viewer = lineData.Viewer
+    viewer = lineData.viewer
+
+})
+// 记得要清除副作用
+onBeforeUnmount(()=>{
+    removeAllCones(viewer)
 })
 
-onMounted(async () => {
-    const res = await axios.get('http://127.0.0.1:8090/api/v1/getLine')
-    // console.log(res.data.data)
-    subLineData.value = res.data.data
-    // console.log(subLineData.value[0].name)
-})
+
 
 // 重点活动列表
 const activityData = ref([]);
@@ -53,14 +70,17 @@ const currentStations = ref([])
 // 点击线路，跳转到质心点并高亮该线段,展示重点活动，使用电子围墙的材质
 const handleItemClick = (item) => {
     const { name, stationsList, color } = item
+
     flyToLine(viewer, name)
     // 根据线路名称闪烁线路
     binkLineByName(name)
     currentStations.value = stationsList
     activityData.value = activity
-    // showActiveArea(color)
-    console.log('xxxxx')
+    // 光柱效果调用
+    showActiveArea(color)
+
 }
+// 光柱效果方法封装
 const showActiveArea = (color) => {
     removeAllCones(viewer)
     const ids = activityData.value.map(item => item.id)
@@ -78,9 +98,16 @@ const showActiveArea = (color) => {
         })
     })
 }
+// 引入日期插件
+const date = computed(() => {
+    return dayjs().format("YYYY-MM-DD");
+});
 
-
-
+// 选中具体的活动，视角跳转到该活动的位置，并高亮该活动
+const clickActiveItem=(item)=>{
+    const {id}=item
+    flyToCone(viewer,id)
+}
 </script>
 
 <style lang="scss" scoped>

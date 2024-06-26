@@ -3,7 +3,7 @@
     <!-- 地铁线路 -->
     <div class="subline_station">
       <div class="subline_header">
-        <i class="iconfont icon-dibudaohanglan-"></i>地铁线路
+        <i class="iconfont icon-dibudaohanglan"></i>地铁线路
       </div>
       <div class="item-wrapper">
         <div
@@ -28,14 +28,10 @@
       <div class="subline_header">
         <i class="iconfont icon-ditie"></i>地铁站点
       </div>
-      <div class="item-wrapper">
-        <div
-          class="subline_list"
-          v-for="(item, index) in resultList"
-          :key="index"
-        >
+      <div class="station-wrapper">
+        <div class="station" v-for="(item, index) in stationData" :key="index">
           <div class="box"></div>
-          <span :style="{ color: '#34c5cf' }"> {{ item.name.slice(-3) }}</span>
+          <span :style="{ color: '#34c5cf' }"> {{ item.name }}</span>
         </div>
       </div>
     </div>
@@ -48,33 +44,39 @@ import { ref, onMounted, onBeforeUnmount, getCurrentInstance } from "vue";
 import axios from "axios";
 import { useLineData } from "@/store";
 import { lineColors } from "../store/staticData";
+import { getPositions, getSiteTimes } from "@/cesiumTools/core";
 const { appContext } = getCurrentInstance();
 const global = appContext.config.globalProperties;
-//const lineData = useLineData();
-const subLineData = ref([]);
+const lineData = useLineData();
+const subLineData = lineData.allData;
+console.log(subLineData);
 const resultList = ref([]);
-const stationsList = ref({});
+const stationData = ref([]);
 const linecolors = lineColors;
 console.log(linecolors, "linecolor");
 onMounted(() => {
-  axios.get("http://127.0.0.1:8090/api/v1/getLine").then((res) => {
-    console.log(res.data);
-    subLineData.value = res.data.data;
-    //console.log()
-    resultList.value = subLineData.value.map((item, index) => {
-      return { ...item, color: linecolors[index] };
-    });
-    stationsList.value = resultList.stationsList;
-    console.log(stationsList.value, "stationsList");
-    console.log(resultList.value);
-    console.log(typeof subLineData.value, " subLineData.value");
+  // axios.get("http://127.0.0.1:8090/api/v1/getLine").then((res) => {
+  // console.log(res.data);
+  // subLineData.value = res.data.data;
+  //console.log()
+  resultList.value = subLineData.map((item, index) => {
+    return { ...item, color: linecolors[index] };
   });
+  console.log(resultList.value);
+  console.log(typeof subLineData.value, " subLineData.value");
+  // });
 });
 const chooseLine = (item) => {
+  console.log(item, "item");
   resultList.value.forEach((dataItem) => {
     dataItem.isSelected = false;
   });
   item.isSelected = true;
+  const { stationsList, id, paths } = item;
+  console.log(stationsList, "stationsList");
+
+  stationData.value = stationsList;
+  console.log(paths, "paths");
 };
 </script>
 
@@ -112,6 +114,9 @@ const chooseLine = (item) => {
   width: 20px;
   height: 20px;
 }
+.subline_header i {
+  margin-right: 5px;
+}
 .item-wrapper {
   display: flex;
   justify-content: space-around;
@@ -136,6 +141,7 @@ const chooseLine = (item) => {
 }
 .box {
   width: 10px;
+  min-width: 10px;
   height: 10px;
   border-width: 1px;
   border-style: solid;
@@ -143,6 +149,20 @@ const chooseLine = (item) => {
   user-select: all;
   cursor: pointer;
   transition: all 0.3s linear;
+}
+.station-wrapper {
+  display: flex;
+  justify-content: start;
+  align-content: space-around;
+  flex-wrap: wrap;
+  flex: 1;
+  padding: 4px;
+  overflow: hidden;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    width: 3px;
+    height: 10px;
+  }
 }
 .station_list {
   position: absolute;
@@ -155,5 +175,28 @@ const chooseLine = (item) => {
   border: 1px solid #ab7818;
   display: flex;
   flex-direction: column;
+}
+.station {
+  width: 64.992px;
+  height: 20.006px;
+  display: flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.156vw;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid #885f12;
+  color: #fff;
+  font-size: 0.521vw;
+  pointer-events: all;
+  margin-left: 15px;
+}
+.box {
+  margin-right: 5px;
+}
+.station span {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
