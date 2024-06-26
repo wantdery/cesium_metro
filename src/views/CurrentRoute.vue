@@ -55,16 +55,11 @@ const stationData = ref([]);
 const linecolors = lineColors;
 console.log(linecolors, "linecolor");
 onMounted(() => {
-  // axios.get("http://127.0.0.1:8090/api/v1/getLine").then((res) => {
-  // console.log(res.data);
-  // subLineData.value = res.data.data;
-  //console.log()
   resultList.value = subLineData.map((item, index) => {
     return { ...item, color: linecolors[index] };
   });
   console.log(resultList.value);
   console.log(typeof subLineData.value, " subLineData.value");
-  // });
 });
 const chooseLine = (item) => {
   console.log(item, "item");
