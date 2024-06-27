@@ -33,7 +33,7 @@ measureDataStore.$onAction(
         result.forEach(item => {
           const target = item.find(n => n.name === props.label)
           if(target){
-            console.log(target.measures);
+            // console.log(target.measures);
             measures.value = target.measures
           }
         })

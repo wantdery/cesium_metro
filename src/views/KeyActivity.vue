@@ -18,7 +18,7 @@
         <div class="content">
             <div class="active-wrapper" v-if="activityData.length">
                 <div v-for="item in activityData" class="acitve-item"
-                    @click="clickActiveItem(item)">
+                    @click="clickActiveItem(item)" :key="item">
                     <!-- :class="['acitve-item', item.isActive ? 'item-active' : '']" -->
                     <div>{{ item.activedTime }}</div>
                     <div>{{ item.activedPlace }}</div>

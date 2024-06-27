@@ -50,6 +50,19 @@ import HlsLive from "../components/charts/HlsLive.vue";//实时影像
 import router from "@/router";
 import { ref, watch } from "vue";
 const baseMode = ref(true);
+
+watch(router.currentRoute,val=>{
+  console.log(val);
+  if(val.path==='/station_manage'){
+    baseMode.value = false;
+  }else{
+    baseMode.value = true;
+  }
+},{
+  deep:true
+})
+
+
 </script>
 
 <style scoped>
