@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div class="center-wrapper">
+    <div class="center-wrapper" v-if="!isInRouteDesign">
       <!-- 地铁线路 -->
       <div class="subline_station">
         <div class="subline_header">
@@ -81,15 +81,17 @@
         </div>
       </div>
     </div>
+    <RouteDesign v-if="isInRouteDesign" />
   </div>
 </template>
 
 <script setup>
-import { stationMangeItems, station_solutions } from "@/store/staticData.js";
 import { ref, onMounted, onBeforeUnmount, getCurrentInstance } from "vue";
-import { useLineData, useMeasureData } from "@/store";
+import { stationMangeItems, station_solutions } from "@/store/staticData.js";
+import RouteDesign from "./RouteDesign.vue";
 import { focusOnStation, renderHeat } from "@/cesiumTools/effectController.js";
 import { lineColors } from "../store/staticData";
+import { useLineData, useMeasureData } from "@/store";
 import * as Cesium from "cesium";
 const lineData = useLineData();
 const measureDataStore = useMeasureData();
@@ -100,8 +102,10 @@ const currentStation = ref({});
 const currentLine = ref({});
 let viewer;
 
+const isInRouteDesign = ref(false);
+
 console.log(stationMangeItems);
-console.log(subLineData);
+console.log(subLineData, "subLineData");
 const stationMangeArr = ref(stationMangeItems);
 const stationSolutionsArr = ref(station_solutions);
 
@@ -111,6 +115,16 @@ onMounted(() => {
     return { ...item, color: lineColors[index] };
   });
 });
+
+onBeforeUnmount(() => {
+  recoverEffect();
+});
+
+const recoverEffect = () => {
+  destroyHeat && destroyHeat();
+  isInRouteDesign.value = false;
+  measureDataStore.clearData();
+};
 
 const chooseLine = (line) => {
   stationList.value = line.stationsList;
@@ -179,7 +193,7 @@ const renderStationMeasure = () => {
 };
 
 const chooseQueryMode = (item) => {
-  destroyHeat && destroyHeat();
+  recoverEffect();
   switch (item.id) {
     case "lineCrowd":
       renderClowed();
@@ -187,9 +201,10 @@ const chooseQueryMode = (item) => {
     case "stationAround":
       break;
     case "pathDesign":
+      isInRouteDesign.value = true;
       break;
     case "stationControl":
-      renderStationMeasure()
+      renderStationMeasure();
       break;
   }
 };
@@ -336,6 +351,65 @@ const chooseQueryMode = (item) => {
   display: flex;
   flex-direction: column;
 }
+
+.route-design-wrapper {
+  position: absolute;
+  right: 14%;
+  top: 5%;
+  .route-design {
+    width: 320px;
+    height: 170px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 1px solid #885f12;
+    .header {
+      span {
+        margin-left: 5px;
+      }
+      .start-btn {
+        width: 80px;
+        color: #fff;
+        margin-left: 140px;
+        background-color: transparent;
+        border: 1px solid #885f12;
+        font-size: 12px;
+        padding: 3px;
+        pointer-events: all;
+        cursor: pointer;
+      }
+      .start-btn:hover {
+        background-color: #5c3f096d;
+        border: 1px solid #881212;
+      }
+    }
+    .content {
+      width: 100%;
+      height: 110px;
+      pointer-events: all;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      color: #fff;
+    }
+  }
+  .route-design > .header {
+    width: 100%;
+    height: 40px;
+    color: #fff;
+    padding-left: 10px;
+    background: rgb(255, 255, 255);
+    background-image: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 1) 9%,
+      rgba(211, 156, 50, 1) 57%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+  }
+}
+
 .subline_header {
   width: 100%;
   height: 30px;
