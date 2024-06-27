@@ -5,13 +5,13 @@
       <!-- <div class="close" @click="closeClick">X</div> -->
       <div>
         <div class="area">
-          <div class="area-title fontColor">{{ stationData.lineName }}</div>
+          <div class="area-title fontColor">{{ attr.name }}</div>
         </div>
         <div class="content textColor">
           <div class="data-li">
             <div>车内人数：</div>
             <div>
-              <span class="num"> {{ attr.currentPassengers }} 人 </span>
+              <span class="num"> {{ attr.peopleNum }} 人 </span>
             </div>
           </div>
         </div>
@@ -20,22 +20,8 @@
   </div>
 </template>
 <script setup>
-//用于获取当前组件的实例，这在需要访问组件实例的一些特性（如vnode）时非常有用。
-import { getCurrentInstance, onMounted, onBeforeUpdate } from "vue";
-let { stationData } = defineProps({
-  currentLine: Object,
-  stationData: Array,
-});
-//  //声明一个变量that，稍后会用来存储组件的实例。
-let that;
-
-/* const closeClick = () => {
-  that.closeEvent();
-}; */
-
-onMounted(() => {
-  //this
-  that = getCurrentInstance().vnode;
+let { attr } = defineProps({
+  attr: Object,
 });
 </script>
 <style scoped>

@@ -66,7 +66,10 @@ console.log(subLineData);
 const resultList = ref([]);
 const stationData = ref([]);
 const currentLine = ref({});
-let viewer;
+let peopleNum = ref(0);
+let viewer, b;
+let popupController;
+let a = ref(null);
 const linecolors = lineColors;
 console.log(linecolors, "linecolor");
 onMounted(() => {
@@ -85,6 +88,7 @@ onMounted(() => {
 });
 let entity, timeObj; //把变量声明出去
 const chooseLine = (item) => {
+  popupController && popupController.removeMarker();
   stationIndex.value = 0;
   if (entity) {
     viewer.entities.remove(entity);
@@ -107,12 +111,11 @@ const chooseLine = (item) => {
   stationData.value = stationsList;
   const firstStation = stationsList[0].position;
   console.log(firstStation, "firstStation");
-  const peoplenum = stationData.value[0].peopleFlow;
-  console.log(peoplenum, "peoplenum");
+
   /*   const { position } = stationData.value;
   console.log(position, "position"); */
   //获取时间戳
-  timeObj = getSiteTimes(linePositions, 40);
+  timeObj = getSiteTimes(linePositions, 60);
   // console.log(timeObj, "timeObj");
   //从san网站复制过来的
   const start = Cesium.JulianDate.fromDate(new Date(2015, 2, 25, 16));
@@ -146,13 +149,12 @@ const chooseLine = (item) => {
     orientation: new Cesium.VelocityOrientationProperty(position),
   });
   viewer.trackedEntity = entity;
-  bubble = new Bubble({
-    viewer: viewer,
-    stationData: stationData,
-    currentLine: currentLine,
-  });
+
   //监听笛卡尔坐标
   viewer.clock.onTick.addEventListener(tickEventListener);
+
+  //气泡框
+  renderBubble(item);
 };
 //监听方法
 let stationIndex = ref(0); //声明一个变量
@@ -165,29 +167,63 @@ const tickEventListener = () => {
     Cesium.JulianDate.fromDate(new Date(2015, 2, 25, 16))
   );
   //当前点坐标
-  let a = entity.position.getValue(viewer.clock.currentTime);
-
+  a.value = entity.position.getValue(viewer.clock.currentTime);
+  // console.log(a, "a");
   //下一个公交站的坐标
 
   //const c=Object.values()
-  const b = Cesium.Cartesian3.fromDegrees(
+  b = Cesium.Cartesian3.fromDegrees(
     ...Object.values(stationData.value[stationIndex.value + 1].position)
   );
   //console.log(stationIndex.value);
   //console.log(b, "b");
-  const distance = spacePointsDistance(a, b); //距离
+  let cartographic = Cesium.Cartographic.fromCartesian(a.value);
+  let lon = Cesium.Math.toDegrees(cartographic.longitude);
+  let lat = Cesium.Math.toDegrees(cartographic.latitude);
+
+  let newPosition = Cesium.Cartesian3.fromDegrees(lon, lat, 2);
+
+  const distance = spacePointsDistance(a.value, b); //距离
   //console.log(distance, "distance");
   //判断到站点,停顿
   if (distance < 50) {
     stationIndex.value += 1;
     viewer.clock.shouldAnimate = false;
+    peopleNum.value = Math.ceil(Math.random() * (1000 - 50 + 1) + 50);
     setTimeout(() => {
       viewer.clock.shouldAnimate = true;
     }, 2500);
   }
+  // 还需要通过startPosition计算气泡框坐标
+  popupController && popupController.changePosition(a.value);
 };
+//渲染气泡框
+const renderBubble = (item) => {
+  console.log(item, item);
+  const { id, name } = item;
+  console.log(id, name, "test1111");
+  console.log(a.value, "a");
+  peopleNum.value = Math.ceil(Math.random() * (1000 - 50 + 1) + 50);
+  popupController = new SimpleLabel(viewer, {
+    position: a.value,
+    label: null,
+    isShow: true,
+    color: "#fff",
+    scaleByDistance: null,
+    offset: [130, 205],
+    attr: {
+      peopleNum,
+      name,
+    },
+    type: "carPopup",
+  });
+  console.log(popupController, "popupController");
+  popupController.addLabel();
+};
+
 onUnmounted(() => {
   viewer.entities.remove(entity);
+  popupController && popupController.removeMarker();
   viewer.clock.shouldAnimate = false;
   viewer.clock.onTick.removeEventListener(tickEventListener);
 });
