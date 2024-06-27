@@ -34,7 +34,7 @@ const disabled = ref(false);
 const isManage = ref(false)
 const isFullScreen = ref(false);
 const MousePositionShowed = ref(false);
-let positionStatus
+let positionStatus;
 onMounted(async () => {
   const viewer = await watchLineData('setViewer')
   const lineData = await watchLineData('setData')
@@ -60,6 +60,7 @@ const controlFullScreen = () => {
   isFullScreen.value && cancelFullscreen();
   !isFullScreen.value && fullScreen(targetEle);
   isFullScreen.value = !isFullScreen.value;
+
 };
 
 lineDataStore.$onAction(({ name, store, args, after, onError })=>{
@@ -71,6 +72,8 @@ lineDataStore.$onAction(({ name, store, args, after, onError })=>{
 })
 
 const controlMouse = () => {
+  // console.log(positionStatus);
+  // positionStatus.show()
   MousePositionShowed.value ? positionStatus.show() : positionStatus.hide();
   MousePositionShowed.value = !MousePositionShowed.value;
 };

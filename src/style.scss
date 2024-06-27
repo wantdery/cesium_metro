@@ -53,3 +53,13 @@
   color: #fff;
   border: none !important;
 }
+
+.position-info-status-bar {
+    width: 8vw;
+    font-size: 12px;
+    bottom: 15px;
+    position: absolute;
+    left: 5px;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+}

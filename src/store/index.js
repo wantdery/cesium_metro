@@ -7,6 +7,7 @@
  * @LastEditTime: 2024-05-08 16:11:36
  */
 import { defineStore } from "pinia";
+import { displayByName } from "@/cesiumTools/effectController";
 
 export const useLineData = defineStore("lineData", {
   state: () => {

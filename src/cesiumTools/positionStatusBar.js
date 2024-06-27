@@ -92,6 +92,7 @@ export default class PositionInfoStatusBar {
     //显示
     show() {
         this.container.style.display = "block";
+        console.log(this.container)
     }
 
     //隐藏
