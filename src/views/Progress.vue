@@ -26,7 +26,7 @@
     <!-- 2-2进度条content -->
     <div class="content">
       <a-slider
-        style="width: 500px"
+        style="width: 600px"
         v-if="resPaths.length !== 0"
         v-model:value="currentTime"
         :marks="marks"
@@ -76,7 +76,7 @@ onBeforeUnmount(() => {
   //1-- 清除已经有的数据以及实体
   removeByCacheData(viewer, dataEnts);
   //2-- 全局管理恢复，路线展示恢复--???
-  //lineDataStore.disableController(false);
+  lineDataStore.disableController(false);
   //3-- 将站点站线全部展示
   const lineNames = lineDataStore.allData.map((item) => item.name);
   lineDataStore.displayLine(lineNames, true);
@@ -305,7 +305,7 @@ watch(currentTime, (val) => {
 }
 
 .active-panel {
-  width: 580px;
+  width: 600px;
   height: 170px;
   border: 1px solid #ab7818;
   background-color: rgba(0, 0, 0, 0.3);
